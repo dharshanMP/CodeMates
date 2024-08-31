@@ -1,0 +1,27 @@
+body {
+  background-color: rgb(219, 148, 254);
+}
+
+#content {
+  display: flex;
+  justify-content: center;
+  margin-top: 10%;
+}
+#heading {
+  display: flex;
+  justify-content: center;
+  margin-top: 5%;
+  font-weight: bold;
+  font-size: 200%;
+}
+
+#description {
+  display: flex;
+  justify-content: center;
+  margin-top: 7%;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+#inputURL {
+  margin-bottom: 20px;
+  width: 300px;
+}

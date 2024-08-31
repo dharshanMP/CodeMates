@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URL Checker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1 id="heading">CODEMATES</h1>
+    <h2 id="description">
+      Hello Mates! Welcome to our website. Just paste the URL and check if the
+      website is scam-free or not.
+    </h2>
+    <div id="content">
+      <input type="text" id="urlInput" placeholder="Enter URL" />
+      <button onclick="checkUrl()">CHECK</button>
+    </div>
+    <div id="result"></div>
+
+    <script>
+      async function checkUrl() {
+        const url = document.getElementById("urlInput").value;
+        if (url) {
+          const apiUrl = "https://www.virustotal.com/api/v3/urls";
+          const apiKey =
+            "87c7c47dd5c6c27407ecef6da0207498bbcd8e6cd80ba0144a18dc933f63b224";
+
+          const encodedUrl = btoa(url);
+
+          try {
+            const response = await fetch(apiUrl, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "x-apikey": apiKey,
+              },
+              body: `url=${encodedUrl}`,
+            });
+
+            const result = await response.json();
+            const analysisId = result.data.id;
+
+            const reportResponse = await fetch(
+              `https://www.virustotal.com/api/v3/urls/${analysisId}`,
+              {
+                method: "GET",
+                headers: {
+                  "x-apikey": apiKey,
+                },
+              }
+            );
+
+            if (!reportResponse.ok) {
+              throw new Error("Network response was not ok");
+            }
+
+            const reportResult = await reportResponse.json();
+            const status =
+              reportResult.data.attributes.last_analysis_stats.malicious > 0
+                ? "malicious"
+                : "safe";
+
+            document.getElementById(
+              "result"
+            ).innerText = `The website ${url} is ${status}.`;
+          } catch (error) {
+            console.error("Error:", error);
+            document.getElementById("result").innerText =
+              "There was an error checking the URL.";
+          }
+        } else {
+          alert("Please enter a valid URL.");
+        }
+      }
+    </script>
+  </body>
+</html>
